@@ -27,6 +27,7 @@ import qualified MpsNoPrefixTest
 import qualified MigrationColumnLengthTest
 import qualified MigrationOnlyTest
 import qualified PersistentTest
+import qualified PersistLiteralTestSQL
 import qualified PersistUniqueTest
 import qualified PrimaryTest
 import qualified RawSqlTest
@@ -205,6 +206,8 @@ main = do
     EquivalentTypeTest.specsWith db
     TransactionLevelTest.specsWith db
     MigrationTest.specsWith db
+    -- TODO: Enable the following test when sqlite version is updated to > 3.31.0
+    -- PersistLiteralTestSQL.specsWith db
 
     it "issue #328" $ asIO $ runSqliteInfo (mkSqliteConnectionInfo ":memory:") $ do
         runMigration migrateAll
