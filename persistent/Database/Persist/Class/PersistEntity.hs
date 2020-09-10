@@ -205,7 +205,7 @@ entityValues (Entity k record) =
   if isJust (entityPrimary ent)
     then
       -- TODO: check against the key
-      map toPersistValue (toPersistFields record)
+      map toPersistValueInsert (toPersistFields record)
     else
       keyToValues k ++ map toPersistValue (toPersistFields record)
   where

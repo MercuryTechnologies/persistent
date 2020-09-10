@@ -202,7 +202,7 @@ instance PersistStoreWrite SqlBackend where
         tshow = T.pack . show
         throw = liftIO . throwIO . userError . T.unpack
         t = entityDef $ Just val
-        vals = map toPersistValue $ toPersistFields val
+        vals = map toPersistValueInsert $ toPersistFields val
 
     insertMany [] = return []
     insertMany vals = do
@@ -216,14 +216,14 @@ instance PersistStoreWrite SqlBackend where
                     _ -> error "ISRSingle is expected from the connInsertManySql function"
                 where
                     ent = entityDef vals
-                    valss = map (map toPersistValue . toPersistFields) vals
+                    valss = map (map toPersistValueInsert . toPersistFields) vals
 
     insertMany_ vals0 = runChunked (length $ entityFields t) insertMany_' vals0
       where
         t = entityDef vals0
         insertMany_' vals = do
           conn <- ask
-          let valss = map (map toPersistValue . toPersistFields) vals
+          let valss = map (map toPersistValueInsert . toPersistFields) vals
           let sql = T.concat
                   [ "INSERT INTO "
                   , connEscapeName conn (entityDB t)
@@ -247,7 +247,7 @@ instance PersistStoreWrite SqlBackend where
                 , " WHERE "
                 , wher
                 ]
-            vals = map toPersistValue (toPersistFields val) `mappend` keyToValues k
+            vals = map toPersistValueInsert (toPersistFields val) `mappend` keyToValues k
         rawExecute sql vals
       where
         go conn x = connEscapeName conn x `T.append` "=?"
@@ -277,8 +277,8 @@ instance PersistStoreWrite SqlBackend where
         let nr  = length krs
         let toVals (k,r)
                 = case entityPrimary ent of
-                    Nothing -> keyToValues k <> (toPersistValue <$> toPersistFields r)
-                    Just _  -> toPersistValue <$> toPersistFields r
+                    Nothing -> keyToValues k <> (toPersistValueInsert <$> toPersistFields r)
+                    Just _  -> toPersistValueUpdate <$> toPersistFields r
         case connRepsertManySql conn of
             (Just mkSql) -> rawExecute (mkSql ent nr) (concatMap toVals krs)
             Nothing -> mapM_ (uncurry repsert) krs

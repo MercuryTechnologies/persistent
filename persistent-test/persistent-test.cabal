@@ -46,6 +46,7 @@ library
                      RenameTest
                      Recursive
                      SumTypeTest
+                     Timestamps
                      TransactionLevelTest
                      TreeTest
                      UniqueTest

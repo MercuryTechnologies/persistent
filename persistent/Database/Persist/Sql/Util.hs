@@ -26,7 +26,7 @@ import Database.Persist (
   , PersistEntity, PersistValue
   , keyFromValues, fromPersistValues, fieldDB, entityId, entityPrimary
   , entityFields, entityKeyFields, fieldHaskell, compositeFields, persistFieldDef
-  , keyAndEntityFields, toPersistValue, DBName, Update(..), PersistUpdate(..)
+  , keyAndEntityFields, toPersistValueUpdate, DBName, Update(..), PersistUpdate(..)
   , FieldDef
   )
 import Database.Persist.Sql.Types (Sql, SqlBackend, connEscapeName)
@@ -100,7 +100,7 @@ updateFieldDef (Update f _ _) = persistFieldDef f
 updateFieldDef BackendUpdate {} = error "updateFieldDef: did not expect BackendUpdate"
 
 updatePersistValue :: Update v -> PersistValue
-updatePersistValue (Update _ v _) = toPersistValue v
+updatePersistValue (Update _ v _) = toPersistValueUpdate v
 updatePersistValue (BackendUpdate{}) =
     error "updatePersistValue: did not expect BackendUpdate"
 

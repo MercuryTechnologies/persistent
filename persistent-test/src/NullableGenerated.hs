@@ -10,7 +10,9 @@ import Init
 newtype NullableGenerated a = NullableGenerated (Maybe a) deriving (Show, Eq)
 
 instance forall a. PersistField a => PersistField (NullableGenerated a) where
-  toPersistValue (NullableGenerated _) = PersistLiteral "DEFAULT"
+  toPersistValueInsert _ = PersistLiteral "DEFAULT"
+  toPersistValueUpdate _ = PersistLiteral "DEFAULT"
+  toPersistValue (NullableGenerated a) = toPersistValue a
   fromPersistValue g = NullableGenerated <$> fromPersistValue g
 
 instance forall a. PersistFieldSql a => PersistFieldSql (NullableGenerated a) where

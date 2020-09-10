@@ -17,7 +17,7 @@ will fail as will builds for packages for those backends alone:
     Process exited with code: ExitFailure 1
     Configuring mysql-0.1.4...
     setup: The program 'mysql_config' is required but it could not be found
-    
+
 > stack build persistent-postgresql
 ...
     Process exited with code: ExitFailure 1
@@ -34,21 +34,45 @@ persistent-mongoDB persistent-redis
 Completed 6 action(s).
 ```
 
+## Backends on MacOS
+
+The postgres backend requires the C library `libpq`, which comes packaged with `postgresql`.
+
+```
+> brew install postgresql
+```
+
+The mysql backend requires the C library `mysqlclient`. It's available in Homebrew, but requires a custom step after install.
+
+```
+> brew install mysqlclient
+> echo 'export PATH="/usr/local/opt/mysql-client/bin:$PATH"' >> ~/.bash_profile
+> source ~/.bash_profile
+```
+
+If using zsh (the default shell in Catalina and later), replace `~/.bash_profile` with `~/.zshrc`.
+
 # Running persistent tests using Stack
 
 To run all the tests for the repository, run:
 
-    > stack test
+```
+> stack test
+```
 
 For testing specific packages, you can run:
 
-    > stack test persistent-sqlite
+```
+> stack test persistent-sqlite
+```
 
 This will run the tests for the `persistent-sqlite` package alone.
 
 # Running persistent tests using Cabal
 
-    > cabal new-test all
+```
+> cabal new-test all
+```
 
 To test a specific package, you'll pass the package names instead of `all`.
 

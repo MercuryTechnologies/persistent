@@ -92,6 +92,12 @@ class PersistField a where
     toPersistValue :: a -> PersistValue
     fromPersistValue :: PersistValue -> Either T.Text a
 
+    toPersistValueInsert :: a -> PersistValue
+    toPersistValueInsert = toPersistValue
+
+    toPersistValueUpdate :: a -> PersistValue
+    toPersistValueUpdate = toPersistValue
+
 #ifndef NO_OVERLAP
 instance {-# OVERLAPPING #-} PersistField [Char] where
     toPersistValue = PersistText . T.pack
