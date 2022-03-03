@@ -308,13 +308,13 @@ instance PersistField UTCTime where
     fromPersistValue x@(PersistText t)  =
         let s = T.unpack t
         in
-          case reads s of
-            (d, _):_ -> Right d
-            _ ->
-                case parse8601 s <|> parsePretty s of
-                    Nothing -> Left $ fromPersistValueParseError "UTCTime" x
-                    Just x' -> Right x'
+          case parse8601 s <|> parsePretty s <|> parseReadInstance s of
+            Nothing -> Left $ fromPersistValueParseError "UTCTime" x
+            Just x' -> Right x'
       where
+        parseReadInstance str = case reads str of
+          (d, _):_ -> Just d
+          _ -> Nothing
 #if MIN_VERSION_time(1,5,0)
         parse8601 = parseTimeM True defaultTimeLocale format8601
         parsePretty = parseTimeM True defaultTimeLocale formatPretty
