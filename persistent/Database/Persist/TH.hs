@@ -2348,7 +2348,15 @@ mkLenses mps entityMap ent = fmap mconcat $ forM (getUnboundFieldDefs ent `zip` 
     where
         fieldNames = fieldDefToRecordName mps ent <$> getUnboundFieldDefs ent
 
-#if MIN_VERSION_template_haskell(2,17,0)
+#if MIN_VERSION_GLASGOW_HASKELL(9,9,0,0)
+mkPlainTV
+    :: Name
+    -> TyVarBndr BndrVis
+mkPlainTV n = PlainTV n BndrReq
+
+mkForallTV :: Name -> TyVarBndr Specificity
+mkForallTV n = PlainTV n SpecifiedSpec
+#elif MIN_VERSION_template_haskell(2,17,0)
 mkPlainTV
     :: Name
     -> TyVarBndr ()
